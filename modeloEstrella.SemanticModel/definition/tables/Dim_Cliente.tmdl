@@ -1,0 +1,53 @@
+table Dim_Cliente
+	lineageTag: c56cda3c-f1b4-4662-ac13-075f503248fb
+
+	column ID_Cliente
+		dataType: int64
+		formatString: 0
+		lineageTag: 1fbdf78a-585d-4b9d-98c0-0ed8e2f19c4d
+		summarizeBy: none
+		sourceColumn: ID_Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nombre_Cliente
+		dataType: string
+		lineageTag: 0a37bbe2-e0be-4cce-9181-e7a73d45032c
+		summarizeBy: none
+		sourceColumn: Nombre_Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column País
+		dataType: string
+		lineageTag: 6f21e812-ec01-4d3f-a9f9-24e033410783
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segmento
+		dataType: string
+		lineageTag: 9ca6f008-5886-4987-aea7-d9161e4036ce
+		summarizeBy: none
+		sourceColumn: Segmento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cantidad Clientes' = DISTINCTCOUNT(Fact_Ventas[ID_Cliente])
+		dataType: int64
+		lineageTag: 769bc3c0-c325-4126-a84c-2c2b41a87312
+
+	partition Dim_Cliente = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("G:\My Drive\estudios\ecotec\docencia\Modelos de Datos\Modelo Estrella\modelo_estrella_ventas.xlsx"), null, true),
+				    Dim_Cliente_Sheet = Source{[Item="Dim_Cliente",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Dim_Cliente_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ID_Cliente", Int64.Type}, {"Nombre_Cliente", type text}, {"País", type text}, {"Segmento", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

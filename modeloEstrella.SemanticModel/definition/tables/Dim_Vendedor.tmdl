@@ -1,0 +1,41 @@
+table Dim_Vendedor
+	lineageTag: 3782345b-3635-4560-8c56-3c20006a4f6a
+
+	column ID_Vendedor
+		dataType: int64
+		formatString: 0
+		lineageTag: 4fb4d1eb-bf68-4c27-a369-6e7ea19746d2
+		summarizeBy: none
+		sourceColumn: ID_Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nombre_Vendedor
+		dataType: string
+		lineageTag: 241efac2-707c-4876-8f12-c70dd0e5e089
+		summarizeBy: none
+		sourceColumn: Nombre_Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Región
+		dataType: string
+		lineageTag: 4c373fb9-53b7-4fed-ab4d-db00cafe9dae
+		summarizeBy: none
+		sourceColumn: Región
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Vendedor = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("G:\My Drive\estudios\ecotec\docencia\Modelos de Datos\Modelo Estrella\modelo_estrella_ventas.xlsx"), null, true),
+				    Dim_Vendedor_Sheet = Source{[Item="Dim_Vendedor",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Dim_Vendedor_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ID_Vendedor", Int64.Type}, {"Nombre_Vendedor", type text}, {"Región", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

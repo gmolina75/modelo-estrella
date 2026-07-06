@@ -1,0 +1,77 @@
+table Dim_Tiempo
+	lineageTag: 09dd2526-c453-473f-b5c0-26c8a79ad5fc
+
+	column ID_Tiempo
+		dataType: int64
+		formatString: 0
+		lineageTag: e3f86719-8b74-4025-80e3-edfc9f99f42d
+		summarizeBy: none
+		sourceColumn: ID_Tiempo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e3aa4b34-07cb-43b1-8ebc-f382e2bb6702
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		variation Variation
+			isDefault
+			relationship: 5635a120-20c4-4478-a6ab-bf74f5b77873
+			defaultHierarchy: LocalDateTable_f765ad47-55ff-4ccc-8b56-26848315075e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Año
+		dataType: int64
+		formatString: 0
+		lineageTag: 86667bcb-3690-484c-be86-c21f5a903848
+		summarizeBy: sum
+		sourceColumn: Año
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		formatString: 0
+		lineageTag: d1867776-b17c-42a2-bc05-3aedcc90b44d
+		summarizeBy: sum
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Día
+		dataType: int64
+		formatString: 0
+		lineageTag: c67477dc-4310-48bd-a43d-783592b9feb3
+		summarizeBy: sum
+		sourceColumn: Día
+
+		annotation SummarizationSetBy = Automatic
+
+	column Trimestre
+		dataType: int64
+		formatString: 0
+		lineageTag: 953331d6-424f-4c90-af79-2fa6e29703e3
+		summarizeBy: sum
+		sourceColumn: Trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Tiempo = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("G:\My Drive\estudios\ecotec\docencia\Modelos de Datos\Modelo Estrella\modelo_estrella_ventas.xlsx"), null, true),
+				    Dim_Tiempo_Sheet = Source{[Item="Dim_Tiempo",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Dim_Tiempo_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ID_Tiempo", Int64.Type}, {"Fecha", type date}, {"Año", Int64.Type}, {"Mes", Int64.Type}, {"Día", Int64.Type}, {"Trimestre", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

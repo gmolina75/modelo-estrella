@@ -1,0 +1,136 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "descuentos_vs_ventas",
+  "position": {
+    "x": 860,
+    "y": 395,
+    "z": 10,
+    "height": 305,
+    "width": 400,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Details": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Producto"
+                    }
+                  },
+                  "Property": "Nombre_Producto"
+                }
+              },
+              "queryRef": "Dim_Producto.Nombre_Producto",
+              "nativeQueryRef": "Dim_Producto.Nombre_Producto",
+              "displayName": "Producto"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Fact_Ventas"
+                        }
+                      },
+                      "Property": "Cantidad"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Fact_Ventas.Cantidad)",
+              "nativeQueryRef": "Sum(Fact_Ventas.Cantidad)",
+              "displayName": "Cantidad",
+              "format": "#,0"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Fact_Ventas"
+                        }
+                      },
+                      "Property": "Descuento"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Fact_Ventas.Descuento)",
+              "nativeQueryRef": "Sum(Fact_Ventas.Descuento)",
+              "active": true,
+              "displayName": "Descuento",
+              "format": "$#,0.00;($#,0.00);$0.00"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Fact_Ventas"
+                        }
+                      },
+                      "Property": "Monto_Neto"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Fact_Ventas.Monto_Neto)",
+              "nativeQueryRef": "Sum(Fact_Ventas.Monto_Neto)",
+              "displayName": "Ventas",
+              "format": "$#,0.00;($#,0.00);$0.00"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {}
+        }
+      ],
+      "background": [
+        {
+          "properties": {}
+        }
+      ],
+      "border": [
+        {
+          "properties": {}
+        }
+      ],
+      "padding": [
+        {
+          "properties": {}
+        }
+      ]
+    }
+  }
+}

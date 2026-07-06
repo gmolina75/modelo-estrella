@@ -1,0 +1,133 @@
+table Fact_Ventas
+	lineageTag: 63d11f70-62f0-44c0-aacf-b854e56cbb55
+
+	column ID_Venta
+		dataType: int64
+		formatString: 0
+		lineageTag: f169240a-2c41-4802-a2b9-06f24c142938
+		summarizeBy: sum
+		sourceColumn: ID_Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Tiempo
+		dataType: int64
+		formatString: 0
+		lineageTag: 3063d58b-4cc9-4576-8cc2-51c9213f4e65
+		summarizeBy: none
+		sourceColumn: ID_Tiempo
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Producto
+		dataType: int64
+		formatString: 0
+		lineageTag: 46d68a01-44fe-43ad-a5b3-dc6478695469
+		summarizeBy: none
+		sourceColumn: ID_Producto
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Cliente
+		dataType: int64
+		formatString: 0
+		lineageTag: e399ae3b-6e72-4e4b-a567-47914298e6bc
+		summarizeBy: none
+		sourceColumn: ID_Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Vendedor
+		dataType: int64
+		formatString: 0
+		lineageTag: 9fb6c595-38da-4ed8-a581-904eb09ca578
+		summarizeBy: none
+		sourceColumn: ID_Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: int64
+		formatString: 0
+		lineageTag: 6c233a62-4d02-494d-bdd5-ca2684969f62
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Monto_Bruto
+		dataType: double
+		lineageTag: 31d7d59d-314b-4a49-8ef1-81a17d44f9b3
+		summarizeBy: sum
+		sourceColumn: Monto_Bruto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Descuento
+		dataType: double
+		lineageTag: a4da2d2e-a61d-4338-ba80-ebd7a67779be
+		summarizeBy: sum
+		sourceColumn: Descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Monto_Neto
+		dataType: double
+		lineageTag: 9b46afe5-f535-4c52-b9e3-aebb5612bef0
+		summarizeBy: sum
+		sourceColumn: Monto_Neto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Ventas' = SUMX(Fact_Ventas, Fact_Ventas[Monto_Neto])
+		dataType: decimal
+		lineageTag: f0860aff-e0b9-4c0b-845e-93bc2c794876
+
+	column 'Total Cantidad' = SUM(Fact_Ventas[Cantidad])
+		dataType: decimal
+		lineageTag: bde6668f-bba8-4007-8bdc-b2f8b246446b
+
+	column 'Total Bruto' = SUMX(Fact_Ventas, Fact_Ventas[Monto_Bruto])
+		dataType: decimal
+		lineageTag: a0f66c3f-db1a-4655-9d11-cd30b4965170
+
+	column 'Total Descuentos' = SUMX(Fact_Ventas, Fact_Ventas[Descuento])
+		dataType: decimal
+		lineageTag: b8f037bc-58d5-42c4-bf05-4c682841f0d2
+
+	column 'Promedio por Unidad' = DIVIDE([Total Ventas], [Total Cantidad], 0)
+		dataType: decimal
+		lineageTag: 1f021321-7ce4-4669-9cd4-c6e1f577f426
+
+	column 'Total Transacciones' = DISTINCTCOUNT(Fact_Ventas[ID_Venta])
+		dataType: int64
+		lineageTag: b003132d-71a0-474f-be8a-d08ba5b5e495
+
+	column 'Venta Promedio' = DIVIDE([Total Ventas], [Total Transacciones], 0)
+		dataType: decimal
+		lineageTag: 86501430-4dc9-4615-9d83-527c1b32b23b
+
+	column '% Descuento' = DIVIDE([Total Descuentos], [Total Bruto])
+		dataType: double
+		formatString: 0.00%
+		lineageTag: ebf368ea-3e2c-48b1-b177-edf9c256cf7b
+
+	partition Fact_Ventas = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("G:\My Drive\estudios\ecotec\docencia\Modelos de Datos\Modelo Estrella\modelo_estrella_ventas.xlsx"), null, true),
+				    Fact_Ventas_Sheet = Source{[Item="Fact_Ventas",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(Fact_Ventas_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ID_Venta", Int64.Type}, {"ID_Tiempo", Int64.Type}, {"ID_Producto", Int64.Type}, {"ID_Cliente", Int64.Type}, {"ID_Vendedor", Int64.Type}, {"Cantidad", Int64.Type}, {"Monto_Bruto", type number}, {"Descuento", type number}, {"Monto_Neto", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

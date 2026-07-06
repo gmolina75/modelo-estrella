@@ -1,0 +1,10 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+**/.pbi/cache.abf*
+**/.pbi/localSettings.json*
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+desktop.ini
+.DS_Store
