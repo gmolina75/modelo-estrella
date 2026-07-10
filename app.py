@@ -3,6 +3,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 import os
+import sys
+
+# Configurar salida estándar en UTF-8 para evitar errores de codificación en Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 # ============================================
 # CARGAR DATOS

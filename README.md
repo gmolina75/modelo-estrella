@@ -1,167 +1,171 @@
-# 📊 Dashboard Modelo Estrella - Guía de Uso
+# 📊 Modelo Estrella de Ventas — Guía de Power BI
 
-## ✅ Descripción General
+Este repositorio contiene un modelo de datos en estrella para el análisis de ventas, implementado en **Power BI Desktop** a partir de un archivo de Excel.
 
-Se ha generado exitosamente un **Dashboard interactivo** basado en el modelo estrella de ventas con **8 gráficos principales**.
+El artefacto principal es el proyecto Power BI (`modeloEstrella.pbip` / `modeloEstrella.pbix`), que contiene la ingesta, las relaciones del modelo estrella, las medidas DAX y los visuales de reporte.
 
-**Datos incluidos:**
-- 💰 **Total Ventas**: $92,111,647.87
-- 👥 **Clientes Únicos**: 200
-- 📦 **Productos**: 30
-- 📈 **Transacciones**: 50,000
+> **⚠️ Dato clave:** este modelo se construyó cargando el archivo de Excel **`modelo_estrella_ventas.xlsx`** en Power BI Desktop a través del archivo **`modeloEstrella.pbix`**.
 
 ---
 
-## 📂 Estructura de Archivos
+## ✅ Alcance del modelo
+
+- **Fuente de datos:** `modelo_estrella_ventas.xlsx`
+- **Total Ventas Netas:** ~USD 92,1 millones
+- **Clientes únicos:** 200
+- **Productos:** 30
+- **Transacciones:** 50.000
+- **Período:** datos diarios agregados por año, mes, trimestre y día
+
+---
+
+## 📂 Archivos principales de Power BI
 
 ```
-graficos/
-├── index.html                    # Dashboard principal (ABRE ESTE)
-├── 01_ventas_categoria.html      # Ventas por Categoría de Producto
-├── 02_top_paises.html            # Top 10 Países por Ventas
-├── 03_ventas_tiempo.html         # Ventas a lo Largo del Tiempo
-├── 04_ventas_region.html         # Distribución de Ventas por Región
-├── 05_top_productos.html         # Top 10 Productos
-├── 06_descuentos_ventas.html     # Descuentos vs Ventas Netas
-├── 07_ventas_segmento.html       # Ventas por Segmento de Cliente
-└── 08_cantidad_monto.html        # Cantidad vs Monto por Producto
+.
+├── modeloEstrella.pbip                         # Proyecto de Power BI (PBIP)
+├── modeloEstrella.pbix                         # Archivo binario de Power BI Desktop
+├── modeloEstrella.Report/                      # Definición del informe (PBIP)
+│   ├── definition.pbir
+│   └── definition/
+│       ├── report.json
+│       └── pages/...
+├── modeloEstrella.SemanticModel/               # Modelo semántico (TOM/DAX)
+│   ├── definition.pbism
+│   ├── definition/model.tmdl
+│   ├── definition/relationships.tmdl
+│   └── definition/tables/*.tmdl
+└── modelo_estrella_ventas.xlsx                 # Origen de datos en Excel
 ```
 
----
-
-## 🚀 Cómo Usar el Dashboard
-
-### Opción 1: Abrir desde el navegador
-1. Ve a la carpeta `graficos/`
-2. Haz doble clic en `index.html`
-3. El navegador abrirá el dashboard principal
-
-### Opción 2: Abrir desde VS Code
-1. Haz clic derecho en `index.html`
-2. Selecciona "Open with Live Server" (si tienes la extensión instalada)
+> Los archivos bajo `.pbi/` y `cache.abf` son generados por Power BI Desktop y están ignorados en el control de versiones.
 
 ---
 
-## 📊 Descripción de los Gráficos
+## 🔄 Ingesta de datos desde Excel
 
-### 1. **💼 Ventas por Categoría**
-- **Tipo**: Gráfico de barras vertical
-- **Datos**: Ventas totales agrupadas por categoría de producto
-- **Uso**: Identificar qué categorías generan más ingresos
+Power BI importa los datos directamente desde la hoja de Excel mediante el conector **Excel.Workbook**. Cada tabla del modelo apunta a una hoja del archivo:
 
-### 2. **🌍 Top 10 Países**
-- **Tipo**: Gráfico de barras horizontal
-- **Datos**: Los 10 países con mayor volumen de ventas
-- **Uso**: Análisis geográfico de desempeño
+| Tabla en Power BI | Hoja de Excel | Descripción |
+|-------------------|---------------|-------------|
+| `Fact_Ventas`     | `Fact_Ventas` | Tabla de hechos con las transacciones |
+| `Dim_Cliente`     | `Dim_Cliente` | Dimensión de clientes |
+| `Dim_Producto`    | `Dim_Producto`| Dimensión de productos |
+| `Dim_Tiempo`      | `Dim_Tiempo`  | Dimensión de tiempo/calendario |
+| `Dim_Vendedor`    | `Dim_Vendedor`| Dimensión de vendedores |
 
-### 3. **📅 Ventas en el Tiempo**
-- **Tipo**: Gráfico de línea con marcadores
-- **Datos**: Ventas agregadas por mes
-- **Uso**: Ver tendencias y patrones estacionales
+### Consideraciones importantes
 
-### 4. **🗺️ Ventas por Región**
-- **Tipo**: Gráfico circular (pie chart)
-- **Datos**: Distribución de ventas por región de vendedor
-- **Uso**: Proporciones de ventas por cada región
-
-### 5. **🏆 Top 10 Productos**
-- **Tipo**: Gráfico de barras horizontal
-- **Datos**: Los 10 productos más vendidos (por monto)
-- **Uso**: Identificar productos estrella
-
-### 6. **💹 Descuentos vs Ventas**
-- **Tipo**: Gráfico de dispersión (scatter)
-- **Datos**: Relación entre descuentos aplicados y ventas netas
-- **Tamaño de burbuja**: Cantidad vendida
-- **Uso**: Analizar el impacto de descuentos
-
-### 7. **👤 Ventas por Segmento**
-- **Tipo**: Gráfico de barras vertical
-- **Datos**: Ventas totales por segmento de cliente
-- **Uso**: Identificar qué segmentos más venden
-
-### 8. **📊 Cantidad vs Monto**
-- **Tipo**: Gráfico de barras agrupadas
-- **Datos**: Top 10 productos con cantidad vendida y monto
-- **Uso**: Comparar volumen vs ingresos
+- El modelo usa **modo Import**: los datos se cargan en memoria al abrir el archivo `.pbip` / `.pbix`.
+- Las expresiones M de las particiones referencian la ruta absoluta del archivo Excel. Si mueves el proyecto a otra ubicación, deberás actualizar la ruta en Power BI Desktop mediante **Transformar datos → Configuración de origen de datos**.
+- Si se actualiza el contenido del Excel (nuevas filas, productos o clientes), basta con hacer clic en **Inicio → Actualizar** para recargar todo el modelo.
 
 ---
 
-## 🔄 Características Interactivas
+## 🏗️ Modelo de datos estrella
 
-Todos los gráficos de Plotly incluyen:
-- ✅ **Zoom**: Haz clic y arrastra para zoom en áreas específicas
-- ✅ **Pan**: Mantén presionado Shift y arrastra para mover
-- ✅ **Hover**: Pasa el mouse para ver valores exactos
-- ✅ **Leyenda**: Haz clic en los elementos de la leyenda para mostrar/ocultar series
-- ✅ **Descarga**: Botón de cámara (📸) para descargar como PNG
+### Tabla de hechos
+
+**`Fact_Ventas`**
+
+| Columna       | Tipo   | Descripción |
+|---------------|--------|-------------|
+| `ID_Venta`    | Entero | Identificador único de la transacción |
+| `ID_Tiempo`   | Entero | Clave foránea a `Dim_Tiempo` |
+| `ID_Producto` | Entero | Clave foránea a `Dim_Producto` |
+| `ID_Cliente`  | Entero | Clave foránea a `Dim_Cliente` |
+| `ID_Vendedor` | Entero | Clave foránea a `Dim_Vendedor` |
+| `Cantidad`    | Entero | Unidades vendidas |
+| `Monto_Bruto` | Decimal| Ingreso antes de descuentos |
+| `Descuento`   | Decimal| Monto descontado |
+| `Monto_Neto`  | Decimal| Ingreso final (ventas netas) |
+
+### Dimensiones
+
+| Dimensión       | Columnas principales |
+|-----------------|----------------------|
+| `Dim_Cliente`   | `ID_Cliente`, `Nombre_Cliente`, `País`, `Segmento` |
+| `Dim_Producto`  | `ID_Producto`, `Nombre_Producto`, `Categoría`, `Precio_Unitario` |
+| `Dim_Tiempo`    | `ID_Tiempo`, `Fecha`, `Año`, `Mes`, `Día`, `Trimestre` |
+| `Dim_Vendedor`  | `ID_Vendedor`, `Nombre_Vendedor`, `Región` |
+
+### Relaciones
+
+El modelo define las siguientes relaciones de uno a muchos entre dimensiones y la tabla de hechos:
+
+- `Dim_Cliente.ID_Cliente` → `Fact_Ventas.ID_Cliente`
+- `Dim_Producto.ID_Producto` → `Fact_Ventas.ID_Producto`
+- `Dim_Tiempo.ID_Tiempo` → `Fact_Ventas.ID_Tiempo`
+- `Dim_Vendedor.ID_Vendedor` → `Fact_Ventas.ID_Vendedor`
 
 ---
 
-## 📈 Datos del Modelo Estrella
+## 📈 Medidas DAX implementadas
 
-El dashboard se basa en **4 dimensiones y 1 tabla de hechos**:
+Las siguientes medidas han sido creadas en la tabla `Fact_Ventas`:
 
-### Dimensiones:
-- **Dim_Cliente**: ID, Nombre, País, Segmento
-- **Dim_Producto**: ID, Nombre, Categoría, Precio Unitario
-- **Dim_Tiempo**: Fecha, Año, Mes, Trimestre
-- **Dim_Vendedor**: ID, Nombre, Región
-
-### Tabla de Hechos:
-- **Fact_Ventas**: Cantidad, Monto Bruto, Descuento, Monto Neto
+| Medida | Fórmula DAX | Descripción |
+|--------|-------------|-------------|
+| **Total Ventas** | `SUMX(Fact_Ventas, Fact_Ventas[Monto_Neto])` | Suma de ventas netas |
+| **Total Cantidad** | `SUM(Fact_Ventas[Cantidad])` | Total de unidades vendidas |
+| **Total Bruto** | `SUMX(Fact_Ventas, Fact_Ventas[Monto_Bruto])` | Suma de ventas brutas |
+| **Total Descuentos** | `SUMX(Fact_Ventas, Fact_Ventas[Descuento])` | Suma de descuentos aplicados |
+| **Promedio por Unidad** | `DIVIDE([Total Ventas], [Total Cantidad], 0)` | Ingreso neto promedio por unidad vendida |
+| **Total Transacciones** | `DISTINCTCOUNT(Fact_Ventas[ID_Venta])` | Cantidad de transacciones únicas |
+| **Venta Promedio** | `DIVIDE([Total Ventas], [Total Transacciones], 0)` | Valor promedio por transacción |
+| **% Descuento** | `DIVIDE([Total Descuentos], [Total Bruto])` | Porcentaje de descuento sobre el bruto |
+| **Cantidad Clientes** | `DISTINCTCOUNT(Fact_Ventas[ID_Cliente])` | Número de clientes únicos con ventas |
+| **Cantidad Productos** | `DISTINCTCOUNT(Fact_Ventas[ID_Producto])` | Número de productos vendidos |
 
 ---
 
-## 🛠️ Mantenimiento
+## 🚀 Cómo abrir y usar el modelo
 
-### Actualizar los gráficos
-Si actualizas el archivo `modelo_estrella_ventas.xlsx`, ejecuta:
+### Opción 1: Power BI Desktop
+
+1. Abre **Power BI Desktop**.
+2. Selecciona **Archivo → Abrir → Examinar**.
+3. Abre `modeloEstrella.pbip` (formato de proyecto) o `modeloEstrella.pbix` (archivo binario).
+4. Si se solicita, actualiza la ruta del origen de datos apuntando a `modelo_estrella_ventas.xlsx`.
+5. Usa el panel **Datos**, **Modelo** y **Informe** para explorar tablas, relaciones y visuales.
+
+### Opción 2: Actualizar datos después de cambiar el Excel
+
+1. Edita o reemplaza `modelo_estrella_ventas.xlsx`.
+2. En Power BI Desktop, ve a **Inicio → Actualizar**.
+3. Verifica que las medidas y visuales reflejen los nuevos valores.
+
+---
+
+## 🛠️ Mantenimiento y modificaciones
+
+Si se cambian columnas o nombres de hojas en el archivo Excel, también es necesario actualizar:
+
+1. Las expresiones M en `modeloEstrella.SemanticModel/definition/tables/*.tmdl`.
+2. Las referencias a columnas en las medidas DAX.
+3. Los visuales del informe en `modeloEstrella.Report/definition/pages/`.
+
+Para modificar el modelo de forma programática también puedes ejecutar:
 
 ```bash
-python app.py
+python generar_visuales_pbip.py
 ```
 
-Esto regenerará todos los gráficos automáticamente.
-
-### Estructura del código
-- **app.py**: Script principal que genera los gráficos
-- **requirements.txt**: Dependencias Python necesarias
+Este script regenera las definiciones JSON de los visuales del reporte a partir del modelo semántico existente.
 
 ---
 
-## 💡 Tips Útiles
+## 📤 Publicación
 
-1. **Para análisis profundos**: Abre cada gráfico individual para obtener una vista más grande y detallada
-2. **Para presentaciones**: Captura pantallazos de los gráficos o descárgalos como imágenes PNG
-3. **Para reportes**: Exporta los gráficos y úsalos en Word, PowerPoint o PDF
-4. **Para compartir**: Comparte toda la carpeta `graficos/` para que otros vean el dashboard
+Para compartir el dashboard:
 
----
-
-## 📝 Medidas DAX Creadas en Power BI
-
-Además del dashboard HTML, se han creado las siguientes medidas en tu modelo Power BI:
-
-- `Total Ventas` = SUMX(Fact_Ventas, Fact_Ventas[Monto_Neto])
-- `Total Cantidad` = SUM(Fact_Ventas[Cantidad])
-- `Total Bruto` = SUMX(Fact_Ventas, Fact_Ventas[Monto_Bruto])
-- `Total Descuentos` = SUMX(Fact_Ventas, Fact_Ventas[Descuento])
-- `Promedio por Unidad` = DIVIDE([Total Ventas], [Total Cantidad], 0)
-- `Cantidad Clientes` = DISTINCTCOUNT(Fact_Ventas[ID_Cliente])
-- `Cantidad Productos` = DISTINCTCOUNT(Fact_Ventas[ID_Producto])
-- `Total Transacciones` = DISTINCTCOUNT(Fact_Ventas[ID_Venta])
-- `Venta Promedio` = DIVIDE([Total Ventas], [Total Transacciones], 0)
-- `% Descuento` = DIVIDE([Total Descuentos], [Total Bruto])
+1. Abre `modeloEstrella.pbix` en Power BI Desktop.
+2. Selecciona **Inicio → Publicar**.
+3. Inicia sesión en el servicio de Power BI y elige el área de trabajo de destino.
 
 ---
 
-## 🎓 Conclusión
+## 📝 Notas
 
-Ahora tienes:
-✅ Un **modelo de datos estrella** bien estructurado en Power BI
-✅ **10 medidas DAX** listas para usar
-✅ Un **dashboard HTML interactivo** con 8 gráficos
-✅ **Gráficos individuales** para análisis detallado
-
-¡Listo para presentar tus análisis de ventas! 📊
+- El proyecto incluye scripts auxiliares de Python (`app.py`, `generar_informe.py`, `generar_visuales_pbip.py`) para generar gráficos HTML y visuales PBIP. Estos no son necesarios para usar el modelo en Power BI Desktop, pero facilitan la generación de artefactos adicionales.
+- Los datos del Excel son de ejemplo/sintéticos. Verifica su contenido antes de publicar en entornos reales.

@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "ventas_tiempo",
   "position": {
     "x": 440,
     "y": 130,
-    "z": 6,
-    "height": 245,
+    "z": 7,
     "width": 400,
-    "tabOrder": 6
+    "height": 245,
+    "tabOrder": 7
   },
   "visual": {
     "visualType": "lineChart",
@@ -28,7 +28,6 @@
               },
               "queryRef": "Dim_Tiempo.Fecha",
               "nativeQueryRef": "Dim_Tiempo.Fecha",
-              "active": true,
               "displayName": "Fecha"
             }
           ]
@@ -63,24 +62,57 @@
     "visualContainerObjects": {
       "title": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "text": "Evolución de ventas en el tiempo",
+            "fontSize": 12,
+            "bold": true,
+            "fontColor": {
+              "solid": {
+                "color": "#1D2730"
+              }
+            }
+          }
         }
       ],
       "background": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
         }
       ],
       "border": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCE3EA"
+              }
+            },
+            "radius": 6,
+            "width": 1
+          }
         }
       ],
       "padding": [
         {
-          "properties": {}
+          "properties": {
+            "top": 8,
+            "bottom": 8,
+            "left": 8,
+            "right": 8
+          }
         }
       ]
     }
-  }
+  },
+  "howCreated": "Default"
 }

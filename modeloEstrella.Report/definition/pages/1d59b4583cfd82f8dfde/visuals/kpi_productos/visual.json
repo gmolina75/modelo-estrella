@@ -1,0 +1,99 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "kpi_productos",
+  "position": {
+    "x": 1028,
+    "y": 20,
+    "z": 5,
+    "width": 232,
+    "height": 92,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Fact_Ventas"
+                        }
+                      },
+                      "Property": "ID_Producto"
+                    }
+                  },
+                  "Function": 2
+                }
+              },
+              "queryRef": "DistinctCount(Fact_Ventas.ID_Producto)",
+              "nativeQueryRef": "DistinctCount(Fact_Ventas.ID_Producto)",
+              "displayName": "Productos",
+              "format": "#,0"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": true,
+            "text": "Productos vendidos",
+            "fontSize": 12,
+            "bold": true,
+            "fontColor": {
+              "solid": {
+                "color": "#1D2730"
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCE3EA"
+              }
+            },
+            "radius": 6,
+            "width": 1
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": 8,
+            "bottom": 8,
+            "left": 8,
+            "right": 8
+          }
+        }
+      ]
+    }
+  },
+  "howCreated": "Default"
+}

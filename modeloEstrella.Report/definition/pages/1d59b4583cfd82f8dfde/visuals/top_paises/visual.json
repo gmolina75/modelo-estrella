@@ -1,13 +1,13 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "top_paises",
   "position": {
     "x": 20,
     "y": 395,
-    "z": 8,
-    "height": 305,
+    "z": 9,
     "width": 400,
-    "tabOrder": 8
+    "height": 305,
+    "tabOrder": 9
   },
   "visual": {
     "visualType": "barChart",
@@ -28,7 +28,6 @@
               },
               "queryRef": "Dim_Cliente.País",
               "nativeQueryRef": "Dim_Cliente.País",
-              "active": true,
               "displayName": "País"
             }
           ]
@@ -79,30 +78,64 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "visualContainerObjects": {
       "title": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "text": "Ventas por país",
+            "fontSize": 12,
+            "bold": true,
+            "fontColor": {
+              "solid": {
+                "color": "#1D2730"
+              }
+            }
+          }
         }
       ],
       "background": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
         }
       ],
       "border": [
         {
-          "properties": {}
+          "properties": {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCE3EA"
+              }
+            },
+            "radius": 6,
+            "width": 1
+          }
         }
       ],
       "padding": [
         {
-          "properties": {}
+          "properties": {
+            "top": 8,
+            "bottom": 8,
+            "left": 8,
+            "right": 8
+          }
         }
       ]
     }
-  }
+  },
+  "howCreated": "Default"
 }
